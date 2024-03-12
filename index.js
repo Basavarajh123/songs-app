@@ -43,3 +43,14 @@ app.get("/songs",async(request,response)=>{
     const data = await database.all(sqlQuery)
     response.send(data)
 })
+
+app.post('/add-songs',async(request,response)=>{
+    const {songUrl,tumbnalImageUrl}= request.body;
+    const sqlQuery= `INSERT INTO songs (songUrl,tumbnalImageUrl)
+                                VALUES("${songUrl}","${tumbnalImageUrl}");
+    
+    `;
+
+    await database.run(sqlQuery);
+    response.send("Song added successfully");
+})
