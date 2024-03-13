@@ -46,11 +46,20 @@ app.get("/songs",async(request,response)=>{
 
 app.post('/add-songs',async(request,response)=>{
     const {songUrl,tumbnalImageUrl}= request.body;
-    const sqlQuery= `INSERT INTO songs (songUrl,tumbnalImageUrl)
+    const checkSongQuery=`SELECT * FROM songs WHERE songUrl="${songUrl}`;
+    const data = await database.get(checkSongQuery);
+    if (data ===undefined){
+        const sqlQuery= `INSERT INTO songs (songUrl,tumbnalImageUrl)
                                 VALUES("${songUrl}","${tumbnalImageUrl}");
     
     `;
 
     await database.run(sqlQuery);
     response.send("Song added successfully");
+        
+    }else{
+        response.status= 400;
+        response.send('Song is Already exists')
+    }
+    
 })
